@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<ul id="ulIdToAppend"></ul>
+
+
+<script>
+    
+
+    $(document).ready(function () {
+        
+        function buffer(items, iterFn, callback){
+            var i=0; len = items.length;
+            setTimeout(function() {                
+
+                var j = 0;
+                for (; i < len && j < 50; i++) {
+                    j++;
+                    iterFn.call(this, items[i]);
+                }
+
+                if (i < len) {
+                    setTimeout(arguments.callee, 200);
+                } else {
+                    callback(items);
+                }
+            }, 20);        
+        }
+
+
+        $.get('/AsychronousExecution/data', function (result) {
+            var html = '';
+
+            buffer(result, function (item) {
+                html += '<li>' + item + '</li>';
+            }, function () {
+                $('#ulIdToAppend').append(html);
+            });
+        });
+
+    });
+
+</script>
+
+
+
